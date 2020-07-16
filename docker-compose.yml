@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+  app:
+    build: .
+    depends_on: 
+      - pair_mongodb
+    environment: 
+      token: secret
+
+  pair_mongodb:
+    image: mongo:latest
+    volumes:
+      - mongodb_pair:/data/db
+
+volumes:
+  mongodb_pair:
