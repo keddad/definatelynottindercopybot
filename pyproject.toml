@@ -6,7 +6,9 @@ authors = ["keddad <keddad@yandex.ru>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-python-telegram-bot = "^12.8"
+pyTelegramBotAPI = "^3.7.2"
+pymongo = "^3.10.1"
+loguru = "^0.5.1"
 
 [tool.poetry.dev-dependencies]
 autopep8 = "^1.5.3"
