@@ -10,6 +10,7 @@ API_TOKEN = os.environ["token"]
 bot = telebot.TeleBot(API_TOKEN)
 
 user_cache: Dict[int, CachedUser] = {}
+id_to_match = {}
 
 
 @bot.message_handler(commands=['start', 'change'])
@@ -87,20 +88,51 @@ def reg_get_photo(message):
         return
 
     user_cache[chat_id].photo_id = message.photo[0].file_id
-
-    msg = bot.reply_to(message, f"{user_cache[chat_id]}")
-
     create_or_update_user(user_cache[chat_id])
     del user_cache[chat_id]
-    bot.register_next_step_handler(msg, get_option)
+    get_option(message)
 
 
+@bot.message_handler(commands=['next'])
 def get_option(message):
-    bot.reply_to(message, "Haha!")
+    candidate = get_new_candidate(message.chat.id)
+    if candidate is None:
+        bot.reply_to(
+            message, "Нет подходящих кандидатов. Попробуй через часик комадной /next")
+        return
+
+    markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
+    markup.add("❤️", "💔")
+
+    msg = bot.send_photo(
+        message.chat.id, candidate["photo_id"], caption=f"{candidate['name']}\n{candidate['bio']}", reply_markup=markup)
+
+    id_to_match[message.chat.id] = candidate["chat_id"]
+    bot.register_next_step_handler(msg, analyze_option)
 
 
-while True:
-    try:
-        bot.polling()
-    except Exception as e:
-        print(e)
+def analyze_option(message):
+    if message.text not in ["❤️", "💔"]:
+        markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
+        markup.add("❤️", "💔")
+        msg = bot.reply_to(
+            message, "Нажми на кнопочку, пожалуйста", reply_markup=markup)
+        bot.register_next_step_handler(msg, analyze_option)
+        return
+
+    people_match(message.chat.id,
+                 id_to_match[message.chat.id], message.text == "❤️")
+                
+    if is_it_match(message.chat.id, id_to_match[message.chat.id]):
+        bot.send_message(
+            message.chat.id, f"It's a match! Пиши скорее {bot.get_chat(id_to_match[message.chat.id]).username}"
+        )
+
+        bot.send_message(
+            id_to_match[message.chat.id], f"It's a match! Пиши скорее {message.from_user.username}"
+        )
+
+    bot.register_next_step_handler_by_chat_id(message.chat.id, get_option)
+
+
+bot.polling()
