@@ -5,7 +5,6 @@ from loguru import logger
 from typing import Dict
 from utils import *
 
-
 API_TOKEN = os.environ["token"]
 
 bot = telebot.TeleBot(API_TOKEN)
@@ -17,7 +16,8 @@ id_to_match = {}
 @bot.message_handler(commands=['start', 'change'])
 def send_welcome(message):
     msg = bot.reply_to(
-        message, "Привет! Сейчас мы будем тебя шипперить. Как тебя зовут? (Ты в любой момент сможешь обновить информацию командой /change)")
+        message,
+        "Привет! Сейчас мы будем тебя шипперить. Как тебя зовут? (Ты в любой момент сможешь обновить информацию командой /change)")
     bot.register_next_step_handler(msg, reg_get_name)
 
 
@@ -31,6 +31,11 @@ def reg_get_name(message):
 
 def reg_get_bio(message):
     chat_id = message.chat.id
+
+    if message[chat_id] not in user_cache:
+        bot.reply_to(message, "Что то сломалось, тебе придется начать сначала")
+        send_welcome(message)
+        return
 
     user_cache[chat_id].bio = message.text
 
@@ -47,6 +52,11 @@ def reg_get_bio(message):
 
 def reg_get_sex(message):
     chat_id = message.chat.id
+
+    if message[chat_id] not in user_cache:
+        bot.reply_to(message, "Что то сломалось, тебе придется начать сначала")
+        send_welcome(message)
+        return
 
     if message.text not in GENDER_INTERPRETATION:
         markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
@@ -69,6 +79,11 @@ def reg_get_sex(message):
 def reg_get_orientation(message):
     chat_id = message.chat.id
 
+    if message[chat_id] not in user_cache:
+        bot.reply_to(message, "Что то сломалось, тебе придется начать сначала")
+        send_welcome(message)
+        return
+
     if message.text not in ORIENTATION_INTERPRETATION:
         markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
         markup.add(*ORIENTATION_INTERPRETATION.keys())
@@ -86,6 +101,11 @@ def reg_get_orientation(message):
 
 def reg_get_photo(message):
     chat_id = message.chat.id
+
+    if message[chat_id] not in user_cache:
+        bot.reply_to(message, "Что то сломалось, тебе придется начать сначала")
+        send_welcome(message)
+        return
 
     if message.content_type != "photo":
         msg = bot.reply_to(message, "Это не фоточка, а мне нужна фоточка")
@@ -130,9 +150,10 @@ def analyze_option(message):
 
     people_match(message.chat.id,
                  id_to_match[message.chat.id], message.text == "❤️")
-                
+
     if is_it_match(message.chat.id, id_to_match[message.chat.id]):
-        logger.debug(f"Match between {bot.get_chat(id_to_match[message.chat.id]).username} and {message.from_user.username}")
+        logger.debug(
+            f"Match between {bot.get_chat(id_to_match[message.chat.id]).username} and {message.from_user.username}")
         bot.send_message(
             message.chat.id, f"It's a match! Пиши скорее @{bot.get_chat(id_to_match[message.chat.id]).username}"
         )
