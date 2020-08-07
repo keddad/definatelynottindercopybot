@@ -7,13 +7,13 @@ mongo = MongoClient("mongodb://pair_mongodb:27017/").db.users
 ORIENTATION_INTERPRETATION = {
     '🏳️‍🌈': "G",
     '👫': "S",
-    'Лава': "A"
+    'Би': "A"
 }
 
 GENDER_INTERPRETATION = {
     'Парень': 'M',
     'Девушка': 'F',
-    "Лава": 'A'
+    "Би": 'A'
 }
 
 ORIENTATION_GENDER_TO_TAGET = {
