@@ -33,8 +33,7 @@ def reg_get_bio(message):
     chat_id = message.chat.id
 
     if chat_id not in user_cache:
-        bot.reply_to(message, "Что то сломалось, тебе придется начать сначала")
-        send_welcome(message)
+        bot.reply_to(message, "Что то сломалось, тебе придется начать сначала. Напиши /start")
         return
 
     user_cache[chat_id].bio = message.text
@@ -54,8 +53,7 @@ def reg_get_sex(message):
     chat_id = message.chat.id
 
     if chat_id not in user_cache:
-        bot.reply_to(message, "Что то сломалось, тебе придется начать сначала")
-        send_welcome(message)
+        bot.reply_to(message, "Что то сломалось, тебе придется начать сначала. Напиши /start")
         return
 
     if message.text not in GENDER_INTERPRETATION:
@@ -80,8 +78,7 @@ def reg_get_orientation(message):
     chat_id = message.chat.id
 
     if chat_id not in user_cache:
-        bot.reply_to(message, "Что то сломалось, тебе придется начать сначала")
-        send_welcome(message)
+        bot.reply_to(message, "Что то сломалось, тебе придется начать сначала. Напиши /start")
         return
 
     if message.text not in ORIENTATION_INTERPRETATION:
@@ -103,8 +100,7 @@ def reg_get_photo(message):
     chat_id = message.chat.id
 
     if chat_id not in user_cache:
-        bot.reply_to(message, "Что то сломалось, тебе придется начать сначала")
-        send_welcome(message)
+        bot.reply_to(message, "Что то сломалось, тебе придется начать сначала. Напиши /start")
         return
 
     if message.content_type != "photo":
@@ -123,8 +119,7 @@ def get_option(message):
     try:
         candidate = get_new_candidate(message.chat.id)
     except IndexError:
-        bot.reply_to(message, "Что то сломалось, тебе придется начать сначала")
-        send_welcome(message)
+        bot.reply_to(message, "Что то сломалось, тебе придется начать сначала. Напиши /start")
         return
 
     if candidate is None:
@@ -165,7 +160,7 @@ def analyze_option(message):
         )
 
         bot.send_message(
-            id_to_match[message.chat.id], f"It's a match! Пиши скорее {message.from_user.username}"
+            id_to_match[message.chat.id], f"It's a match! Пиши скорее @{message.from_user.username}"
         )
 
     get_option(message)
