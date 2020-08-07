@@ -13,7 +13,7 @@ ORIENTATION_INTERPRETATION = {
 GENDER_INTERPRETATION = {
     'Парень': 'M',
     'Девушка': 'F',
-    "Би": 'A'
+    "¯\_(ツ)_/¯": 'A'
 }
 
 ORIENTATION_GENDER_TO_TAGET = {
