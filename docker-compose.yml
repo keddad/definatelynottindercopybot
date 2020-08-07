@@ -6,9 +6,11 @@ services:
       - pair_mongodb
     environment: 
       token: secret
+    restart: always
 
   pair_mongodb:
     image: mongo:latest
+    restart: always
     volumes:
       - mongodb_pair:/data/db
 
