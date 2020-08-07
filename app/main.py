@@ -125,7 +125,7 @@ def analyze_option(message):
                 
     if is_it_match(message.chat.id, id_to_match[message.chat.id]):
         bot.send_message(
-            message.chat.id, f"It's a match! Пиши скорее {bot.get_chat(id_to_match[message.chat.id]).username}"
+            message.chat.id, f"It's a match! Пиши скорее @{bot.get_chat(id_to_match[message.chat.id]).username}"
         )
 
         bot.send_message(
