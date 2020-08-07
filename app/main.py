@@ -1,6 +1,7 @@
 import telebot
 from telebot import types
 import os
+from loguru import logger
 from typing import Dict
 from utils import *
 
@@ -101,8 +102,9 @@ def reg_get_photo(message):
 def get_option(message):
     candidate = get_new_candidate(message.chat.id)
     if candidate is None:
-        bot.reply_to(
-            message, "Нет подходящих кандидатов. Попробуй через часик комадной /next")
+        logger.debug(f"No matches for {message.from_user.username}")
+        bot.send_message(
+            message.chat.id, "Нет подходящих кандидатов. Попробуй через часик комадной /next")
         return
 
     markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
@@ -110,6 +112,8 @@ def get_option(message):
 
     msg = bot.send_photo(
         message.chat.id, candidate["photo_id"], caption=f"{candidate['name']}\n{candidate['bio']}", reply_markup=markup)
+
+    logger.debug(f"Propose {message.from_user.username} & {candidate['chat_id']}")
 
     id_to_match[message.chat.id] = candidate["chat_id"]
     bot.register_next_step_handler(msg, analyze_option)
@@ -128,6 +132,7 @@ def analyze_option(message):
                  id_to_match[message.chat.id], message.text == "❤️")
                 
     if is_it_match(message.chat.id, id_to_match[message.chat.id]):
+        logger.debug(f"Match between {bot.get_chat(id_to_match[message.chat.id]).username} and {message.from_user.username}")
         bot.send_message(
             message.chat.id, f"It's a match! Пиши скорее @{bot.get_chat(id_to_match[message.chat.id]).username}"
         )
@@ -136,7 +141,7 @@ def analyze_option(message):
             id_to_match[message.chat.id], f"It's a match! Пиши скорее {message.from_user.username}"
         )
 
-    bot.register_next_step_handler_by_chat_id(message.chat.id, get_option)
+    get_option(message)
 
 
 bot.polling()
