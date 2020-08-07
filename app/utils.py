@@ -70,6 +70,9 @@ def create_or_update_user(bio: CachedUser):
 def get_new_candidate(to: int):
     user = mongo.find_one({"chat_id": to})
 
+    if user is None:
+        raise IndexError
+
     for elem in mongo.find({"gender": {"$in": ORIENTATION_GENDER_TO_TAGET[user["orientation"]][user["gender"]]}}):
         if elem["chat_id"] not in user["seen"]:
             return elem

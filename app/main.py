@@ -120,7 +120,13 @@ def reg_get_photo(message):
 
 @bot.message_handler(commands=['next'])
 def get_option(message):
-    candidate = get_new_candidate(message.chat.id)
+    try:
+        candidate = get_new_candidate(message.chat.id)
+    except IndexError:
+        bot.reply_to(message, "Что то сломалось, тебе придется начать сначала")
+        send_welcome(message)
+        return
+
     if candidate is None:
         logger.debug(f"No matches for {message.from_user.username}")
         bot.send_message(
