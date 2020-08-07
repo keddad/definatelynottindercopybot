@@ -32,7 +32,7 @@ def reg_get_name(message):
 def reg_get_bio(message):
     chat_id = message.chat.id
 
-    if message[chat_id] not in user_cache:
+    if chat_id not in user_cache:
         bot.reply_to(message, "Что то сломалось, тебе придется начать сначала")
         send_welcome(message)
         return
@@ -53,7 +53,7 @@ def reg_get_bio(message):
 def reg_get_sex(message):
     chat_id = message.chat.id
 
-    if message[chat_id] not in user_cache:
+    if chat_id not in user_cache:
         bot.reply_to(message, "Что то сломалось, тебе придется начать сначала")
         send_welcome(message)
         return
@@ -79,7 +79,7 @@ def reg_get_sex(message):
 def reg_get_orientation(message):
     chat_id = message.chat.id
 
-    if message[chat_id] not in user_cache:
+    if chat_id not in user_cache:
         bot.reply_to(message, "Что то сломалось, тебе придется начать сначала")
         send_welcome(message)
         return
@@ -102,7 +102,7 @@ def reg_get_orientation(message):
 def reg_get_photo(message):
     chat_id = message.chat.id
 
-    if message[chat_id] not in user_cache:
+    if chat_id not in user_cache:
         bot.reply_to(message, "Что то сломалось, тебе придется начать сначала")
         send_welcome(message)
         return
