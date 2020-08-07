@@ -33,6 +33,10 @@ def reg_get_bio(message):
 
     user_cache[chat_id].bio = message.text
 
+    if message.text is None or message.text == "":
+        msg = bot.reply_to(message, 'Био должно быть текстом.')
+        bot.register_next_step_handler(msg, reg_get_bio)
+
     markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
     markup.add(*GENDER_INTERPRETATION.keys())
     msg = bot.reply_to(
