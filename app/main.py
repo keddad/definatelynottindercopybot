@@ -142,6 +142,13 @@ def get_option(message):
 
 def analyze_option(message):
     if message.text not in ["❤️", "💔"]:
+
+        if message.text == "/change":
+            msg = bot.reply_to(
+                message, "Хорошо, мы идем все менять. Как тебя зовут?")
+            bot.register_next_step_handler(msg, reg_get_name)
+            return
+
         markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
         markup.add("❤️", "💔")
         msg = bot.reply_to(
