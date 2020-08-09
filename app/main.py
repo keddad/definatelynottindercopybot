@@ -161,13 +161,17 @@ def analyze_option(message):
 
     if is_it_match(message.chat.id, id_to_match[message.chat.id]):
         logger.debug(
-            f"Match between {bot.get_chat(id_to_match[message.chat.id]).username} and {message.from_user.username}")
+            f"Match between {id_to_match[message.chat.id]} and {message.from_user.id}")
         bot.send_message(
-            message.chat.id, f"It's a match! Пиши скорее @{bot.get_chat(id_to_match[message.chat.id]).username}"
+            message.chat.id,
+            f"It's a match! Пиши скорее [\"{bot.get_chat(id_to_match[message.chat.id]).first_name}\"](tg://user?id={id_to_match[message.chat.id]})",
+            parse_mode="Markdown"
         )
 
         bot.send_message(
-            id_to_match[message.chat.id], f"It's a match! Пиши скорее @{message.from_user.username}"
+            id_to_match[message.chat.id],
+            f"It's a match! Пиши скорее [\"{message.from_user.first_name}\"](tg://user?id={id_to_match[message.chat.id]})",
+            parse_mode="Markdown"
         )
 
     get_option(message)
